@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>OX 퀴즈 게임 : PLAY</h1>
+    <h2>퀴즈</h2>
+    <div th:if="${noQuizMessage}">
+        <p th:text="${noQuizMessage}"></p>
+    </div>
+    <form th:action="@{/quiz/check}" method="get" th:object="${randomQuiz}" th:if="${randomQuiz}">
+        <p th:text="*{description}">
+
+        </p>
+        <span>
+                      <button th:type="submit" name="answer" value="true">O</button>
+                      <button th:type="submit" name="answer" value="false">X</button>
+        </span>
+
+    </form>
+
+</body>
+</html>

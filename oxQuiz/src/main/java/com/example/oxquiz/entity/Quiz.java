@@ -18,18 +18,26 @@ public class Quiz extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String desc;
+    @Column(name = "description")
+    private String description;
     private boolean answer;
     private String writer;
 
-    public Quiz(Long id, String desc, boolean answer, String writer,
+    public Quiz(Long id, String description, boolean answer, String writer,
                 LocalDateTime createdAt, LocalDateTime updatedAt) {
         super();
         this.id = id;
-        this.desc = desc;
+        this.description = description;
         this.answer = answer;
         this.writer = writer;
         this.setCreatedAt(createdAt);
         this.setUpdatedAt(updatedAt);
+    }
+
+    public void update(String description, boolean answer, String writer) {
+        this.description = description;
+        this.answer = answer;
+        this.writer = writer;
+
     }
 }
