@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/jquery/jquery.js"></script>
+    <script src="/js/check.js"></script>
+</head>
+<style>
+    span{
+        font-size: 10px;
+        color: red;
+    }
+</style>
+<body>
+    <form th:action="@{/member/insert}" method="post" th:object="${memberDto}">
+        <div>
+            <label for="memberId">아이디</label>
+            <input type="text" name="memberId" id="memberId" th:field="*{memberId}">
+            <span th:errors="*{memberId}"></span>
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="text" name="password" id="password" th:field="*{password}">
+            <span th:errors="*{password}"></span>
+        </div>
+
+        <button type="submit" value="등록" id="btnSubmit" onclick="location.href='/member/login'">등록</button>
+    </form>
+    <a th:href="@{/member/view}" align = "center">회원정보 화면으로 돌아가기</a>
+</body>
+</html>

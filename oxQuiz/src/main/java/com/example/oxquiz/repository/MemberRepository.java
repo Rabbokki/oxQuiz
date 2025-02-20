@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member,Long> {
-    @Query(value = "SELECT * FROM quiz.quiz ORDER BY RAND() LIMIT 1", nativeQuery = true)
-    List<Object[]> randomQuiz();
+    Optional<Member> findByMemberId(String memberId);
 
 
 }

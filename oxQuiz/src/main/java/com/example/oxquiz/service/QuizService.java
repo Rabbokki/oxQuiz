@@ -43,6 +43,7 @@ public class QuizService {
         List<Object[]> resultList = quizRepository.randomQuiz();
         if (resultList.isEmpty()) {
             System.out.println("퀴즈 없음");
+            return null;
         }
         Object[] result = resultList.get(0);
         System.out.println("Result from database: " + Arrays.toString(result));

@@ -1,7 +1,10 @@
 package com.example.oxquiz.controller;
 
 import com.example.oxquiz.dto.QuizDto;
+import com.example.oxquiz.entity.Member;
+import com.example.oxquiz.service.MemberService;
 import com.example.oxquiz.service.QuizService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class quizController {
     private final QuizService quizService;
+    private final MemberService memberService;
 
     //퀴즈 목록 표시
     @GetMapping("/view")
@@ -26,12 +30,12 @@ public class quizController {
         List<QuizDto> quizDtos = quizService.findAllQuizs();
         System.out.println(quizDtos);
         model.addAttribute("list",quizDtos);
-        return "showQuiz";
+        return "/quiz/showQuiz";
     }
     @GetMapping("/insert")
     public String quizInsertForm(Model model){
         model.addAttribute("quizDto",new QuizDto());
-        return "quizInsert";
+        return "/quiz/quizInsert";
     }
     //퀴즈 등록
     @PostMapping ("/insert")
@@ -55,7 +59,7 @@ public class quizController {
                                  Model model){
         QuizDto dto = quizService.findById(id);
         model.addAttribute("quiz",dto);
-        return "quizUpdate";
+        return "/quiz/quizUpdate";
     }
 
     //퀴즈 수정
@@ -64,7 +68,7 @@ public class quizController {
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
-            return "quizUpdate";
+            return "/quiz/quizUpdate";
         }
         quizService.updateQuiz(dto);
         redirectAttributes.addFlashAttribute("msg","퀴즈 변경 완료");
@@ -87,17 +91,37 @@ public class quizController {
             model.addAttribute("randomQuiz",quizDto);
         }else {
             model.addAttribute("noQuiz","등록된 문제가 없습니다.");
+            return "redirect:/quiz/noQuiz";
         }
-        return "quizPlay";
+        return "/quiz/quizPlay";
+    }
+    @PostMapping("/quiz/play")
+    public String playQuiz() {
+        return "quiz/quizPlay";
     }
 
     //퀴즈 답 체크
     @GetMapping ("/check")
-    public String quizCheck(Model model, @RequestParam("answer") Boolean answer){
+    public String quizCheck(Model model, @RequestParam("answer")Boolean answer,
+                            HttpSession httpSession){
+        Member sessionUser = (Member) httpSession.getAttribute("user");
+        if (sessionUser == null) {
+            return "redirect:/member/login";
+        }
         QuizDto quizDto = quizService.quizPlay();
         boolean check = (quizDto.isAnswer() == answer);
+        if(check){
+            sessionUser.setAnswerTrue(sessionUser.getAnswerTrue()+1);
+        }else {
+            if(sessionUser.getAnswerFalse()>0){
+                sessionUser.setAnswerFalse(sessionUser.getAnswerFalse()-1);
+            }
+        }
+
+        memberService.updateAnswer(sessionUser);
+
         model.addAttribute("randomQuiz",quizDto);
         model.addAttribute("check",check);
-        return "quizCheck";
+        return "/quiz/quizCheck";
     }
 }

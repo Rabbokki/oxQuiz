@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Title</title>
+</head>
+<body>
+<!--alert 처리-->
+  <th:block th:unless="${msg}==null">
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    [[${msg}]]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  </th:block>
+  <h1>관리자 페이지</h1>
+  <h1 align = "center">회원정보 리스트</h1>
+  <table border="1" align = "center">
+    <thead>
+    <tr>
+      <td>No</td>
+      <td>ID</td>
+      <td>PASSWORD</td>
+      <td>STATUS</td>
+      <td>맞은수</td>
+      <td>틀린수</td>
+      <td>수정</td>
+      <td>삭제</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${list}" th:object="${member}">
+      <td>[[*{id}]]</td>
+      <td>[[*{memberId}]]</td>
+      <td>[[*{password}]]</td>
+      <td>
+        <span th:text="${member.status}">false</span>
+        <form th:action="@{/member/changeStatus/{id}(id=${member.id})}" method="POST">
+          <button type="submit">변경</button>
+        </form>
+      </td>
+      <td>[[*{answerTrue}]]</td>
+      <td>[[*{answerFalse}]]</td>
+
+      <td>
+        <a th:href="@{|/member/update/*{id}|}">
+        <button>수정</button>
+        </a>
+      </td>
+      <td>
+        <a th:href="@{|/member/delete/*{id}|}">
+          <button>삭제</button>
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+<br>
+  <a th:href="@{/quiz/insert}">퀴즈 추가</a>
+  <a th:href="@{/quiz/view}">퀴즈 목록</a>
+  <form th:action="@{/member/insertForm}" method="GET" align="center">
+    <input type="submit" value="신규회원입력">
+  </form>
+
+
+
+</body>
+</html>

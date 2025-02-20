@@ -16,9 +16,10 @@ public class MyInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
         // 민쯩 까
         HttpSession session = request.getSession();
-        Member currentSession = (Member) session.getAttribute("sessionInfo");
+        Member currentSession = (Member) session.getAttribute("user");
+        System.out.println("cs : " + currentSession);
         if (ObjectUtils.isEmpty(currentSession)) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/member/login");
             return false;
         }
         return true;
