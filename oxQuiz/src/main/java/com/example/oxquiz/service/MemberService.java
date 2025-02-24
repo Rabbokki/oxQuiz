@@ -43,5 +43,7 @@ public class MemberService {
 
     public void updateAnswer(Member sessionUser) {
         memberRepository.save(sessionUser);
+        memberRepository.save(sessionUser);
+        memberRepository.save(sessionUser);
     }
 }
